@@ -1,6 +1,8 @@
 const router = require("express").Router();
-const client = require("twilio");
+const twilio = require("twilio");
 require("dotenv").config();
+
+const client = twilio(process.env.accoutnSID, process.env.authToken);
 
 
 router.post("/mobile", (req, res) => {
