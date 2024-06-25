@@ -1,0 +1,100 @@
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+US+Trad:wght@100..400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    transition: .3s ease;
+}
+
+:root{
+    --PrimaryColor:#f051bc;
+    --HoverColor:#d440a3;
+    --WhiteColor:#ffffff;
+    --BlackColor:#000000;
+    --TextColor:#D5DBDB ;
+    --WhiteColorDeam:#FDFEFE;
+    --GreyBgColor:#F0F3F4;
+    --GreyTextColor:#ECF0F1;
+    --InputColor:#F8F9F9
+}
+
+a{
+    text-decoration: none;
+}
+li{
+    list-style: none;
+}
+.section{
+    padding: 4rem 0 2rem;
+}
+
+.container{
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+.icon{
+    font-size: 2rem;
+    cursor: pointer;
+}
+.flex{
+    display: flex;
+    align-items: center;
+
+}
+.grid{
+    display: grid;
+    align-items: center;
+}
+.btn{
+    padding: .4rem 1.5rem;
+    background: var(--PrimaryColor);
+    border: none;
+    outline: none;
+    border-radius: 3rem;
+    cursor: pointer;
+}
+
+.btn a{
+    color: var(--WhiteColor);
+    font-weight: 500;
+}
+.btn:hover a{
+    color: var(--WhiteColor);
+}
+
+.secTntro{
+    max-width: 70%;
+    text-align: center;
+    margin: 0 auto 2rem;
+}
+
+.secIntro .secTitle{
+    color: var(--BlackColor);
+    line-height: 1.5rem;
+    padding: .5rem;
+}
+.secIntro p{
+    font-size: 13px;
+    color: var(--TextColor);
+    font-weight: 500;
+}
+img{
+    width: 100%;
+    height: auto;
+}
+input{
+    font-size: 100%;
+}
+.toggleNavbar{
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    color: var(--PrimaryColor);
+
+    &:hover{
+        color: var(--HoverColor);
+    }
+}

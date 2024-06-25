@@ -1,0 +1,108 @@
+// .signUpForm {
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     background: rgba(0, 0, 0, 0.5);
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     z-index: 1000;
+// }
+
+.signUpForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+
+    h2 {
+        margin-bottom: 1rem;
+        color: var(--PrimaryColor);
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    label {
+        margin-bottom: 1rem;
+        width: 100%;
+        font-weight: 600;
+        color: var(--TextColor);
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+    }
+
+    button {
+        padding: 0.75rem;
+        background: var(--PrimaryColor);
+        border: none;
+        color: white;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        transition: background 0.3s ease;
+
+        &:hover {
+            background: var(--HoverColor);
+        }
+    }
+
+    .google-signup-button {
+        background: #db4437;
+        margin-top: 0.5rem;
+
+        &:hover {
+            background: #c53727;
+        }
+    }
+
+    p {
+        margin-top: 1rem;
+        font-size: 1rem;
+        color: var(--TextColor);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .signUpForm {
+        width: 90%;
+        padding: 1.5rem;
+
+        button,
+        .google-signup-button {
+            font-size: 0.9rem;
+        }
+
+        label {
+            input {
+                font-size: 0.9rem;
+            }
+        }
+
+        p {
+            font-size: 0.9rem;
+        }
+    }
+}

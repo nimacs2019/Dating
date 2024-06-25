@@ -1,0 +1,173 @@
+:root {
+    --PrimaryColor: #fc6501;
+    --HoverColor: #d440a3;
+    --WhiteColor: #ffffff;
+    --BlackColor: #000000;
+    --TextColor: #7e8181;
+    --WhiteColorDeam: #fdfefe;
+    --GreyBgColor: #f0f3f4;
+    --GreyTextColor: #ecf0f1;
+    --InputColor: #f8f9f9;
+}
+
+.hero {
+    height: 80vh;
+    background: linear-gradient(rgba(33, 33, 33, 0.122), rgba(33, 33, 33, 0.522)),
+        url("https://images.unsplash.com/photo-1601162275327-4b4ae1c4b3ae?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    background-position: center 1%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    position: relative;
+
+    .secContainer {
+        .heroText {
+            margin: auto;
+            text-align:left;
+
+            .title {
+                
+                color: var(--WhiteColor);
+                font-size: 2rem;
+                font-weight: 700;
+                line-height: 2.5rem;
+            }
+
+            .subTitle {
+                color: var(--WhiteColor);
+                opacity: 0.9;
+                font-size: 13px;
+                font-weight: 300;
+                padding: 1rem 0;
+                max-width: 70%;
+                text-align: left;
+            }
+            .btn {
+                padding: 0.5rem 1.5rem;
+            }
+        }
+
+        // .search-container {
+        //     display: flex;
+        //     align-items: center;
+        //     justify-content: center;
+        //     width: 80%;
+        //     border-radius: 1rem;
+        //     padding: 0.8rem;
+        //     background: var(--WhiteColor);
+        //     position: absolute;
+        //     gap: 1rem;
+        //     justify-content: center;
+        //     bottom: 5%;
+        //     transform: translate(-50%);
+        //     left: 50%;
+        //     box-shadow: 0 2px 8px 4px rgba(178, 178, 178, 0.45);
+
+        //     .search-item {
+        //         width: 100%;
+        //         display: flex;
+        //         align-items: center;
+        //         gap: 5px;
+        //         label {
+        //             display: block;
+        //             color: var(--TextColor);
+        //             font-weight: 500;
+        //             font-size: 13px;
+        //             padding-bottom: 0.4rem;
+        //         }
+
+        //         select {
+        //             width: 90%;
+        //             padding: 0.5rem;
+        //             border: 1px solid #ccc;
+        //             border-radius: 5px;
+        //             font-size: 1rem;
+        //             background-color: #fff;
+        //             color: #333;
+        //         }
+
+        //         input {
+        //             width: 100%;
+        //             background: var(--InputColor);
+        //             border-radius: 10px;
+        //             border: none;
+        //             padding: 10px;
+        //             font-size: 13px;
+        //             font-weight: 500;
+
+        //             &:focus {
+        //                 outline: none;
+        //             }
+        //         }
+        //     }
+
+        //     @media screen and (max-width: 768px) {
+        //         flex-direction: column;
+        //         align-items: stretch;
+        //         gap: 15px;
+
+        //         .search-item {
+        //             flex-direction: column;
+        //             align-items: flex-start;
+
+        //             label {
+        //                 margin-bottom: 5px;
+        //             }
+
+        //             select {
+        //                 width: 100%;
+        //             }
+        //         }
+
+        //         .btn {
+        //             width: 100%;
+        //             padding: 0.6rem 1.5rem;
+        //             color: var(--WhiteColor);
+        //             font-weight: 600;
+        //         }
+        //     }
+        // }
+    }
+}
+
+@media screen and (min-width: 556px) {
+    .hero {
+        .secContainer {
+            .heroText {
+                .title {
+                    font-size: 2.5rem;
+                }
+
+                .subTitle {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 720px) {
+    .hero {
+        .secContainer {
+            .heroText {
+                padding: 1rem 10rem;
+            }
+            .title {
+                font-size: 3.5rem;
+                margin: auto;
+                line-height: 4rem;
+            }
+            .subTitle {
+                width: 70%;
+            }
+            .search-container {
+                bottom: -20%;
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    }
+}
