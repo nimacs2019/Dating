@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 // import { useHistory } from "react-router-dom";
-import Axios from 'axios'
+import axios from 'axios'
 import './Otp.scss';
 
 const Otp = ({ userNumber }) => {
@@ -18,7 +18,7 @@ const Otp = ({ userNumber }) => {
         setError("");
         setSuccess("");
     
-        Axios.post('http://localhost:8080/otp', { otp, userNumber })
+        axios.post('http://localhost:8080/otp', { otp, userNumber })
           .then((res) => {
             if (res.data.resp.valid) {
               setSuccess("OTP verified successfully!");
@@ -43,6 +43,8 @@ const Otp = ({ userNumber }) => {
                     </label>
                     <button type="submit" onClick={handleSubmit}>Verify OTP</button>
                 </form>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {success && <p style={{ color: 'green' }}>{success}</p>}
                 <button className="resend-button">Resend OTP</button>
             </div>
        </secton>

@@ -90,6 +90,7 @@ app.get(
 
 app.get("/login/sucess",async(req,res)=>{
     console.log('requested User',req.user);
+    
 })
 
 // server started at 3000
