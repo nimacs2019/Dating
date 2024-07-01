@@ -1,0 +1,49 @@
+.hobbies-popup {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+
+    .popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+
+        h2 {
+            margin: 0;
+            color: var(--PrimaryColor);
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--PrimaryColor);
+        }
+    }
+
+    .hobbies-list {
+        display: flex;
+        flex-direction: column;
+
+        .hobby-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+
+            input {
+                margin-right: 10px;
+            }
+        }
+    }
+
+    
+}

@@ -3,11 +3,13 @@ import axios from "axios";
 
 function Profile() {
     const [userData, setUserData] = useState({});
+    console.log(userData);
 
     const getUser = async () => {
         try {
-            const response = axios.get("http://localhost:8080/login/sucess", { withCredentials: true });
+            const response = await axios.get("http://localhost:8080/login/success", { withCredentials: true });
             console.log("UserData", response);
+            setUserData(response.data.user)
         } catch (error) {}
     };
 

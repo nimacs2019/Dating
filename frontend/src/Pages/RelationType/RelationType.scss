@@ -1,6 +1,6 @@
 .relationship-container {
     position: fixed;
-    top: 30%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     margin: auto;
@@ -20,6 +20,11 @@
 
         label {
             margin-bottom: 1rem;
+
+            p{
+                font-size: 12px;
+                color: gray;
+            }
 
             input[type="radio"] {
                 margin-right: 0.5rem;

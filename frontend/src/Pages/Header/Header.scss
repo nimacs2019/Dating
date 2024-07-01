@@ -19,7 +19,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        // background: transparent;
+        background: transparent;
         width: 100%;
         padding: 1rem;
         z-index: 1000;
@@ -176,7 +176,8 @@
                     }
 
                     .loginBtn{
-                        background: none;
+                        // background: none;
+                        background: var(--PrimaryColor);
                         border: 1px solid var(--PrimaryColor);
 
                         &:hover{

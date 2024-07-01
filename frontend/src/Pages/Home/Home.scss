@@ -1,0 +1,105 @@
+:root {
+    --PrimaryColor: #fc6501;
+    --HoverColor: #d440a3;
+    --WhiteColor: #ffffff;
+    --BlackColor: #000000;
+    --TextColor: #7e8181;
+    --WhiteColorDeam: #fdfefe;
+    --GreyBgColor: #f0f3f4;
+    --GreyTextColor: #ecf0f1;
+    --InputColor: #f8f9f9;
+}
+
+.home {
+    height: 80vh;
+    background: linear-gradient(rgba(33, 33, 33, 0.122), rgba(33, 33, 33, 0.522)),
+        url("https://images.unsplash.com/photo-1601162275327-4b4ae1c4b3ae?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    background-position: center 1%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    position: relative;
+
+    .secContainer {
+        .homeText {
+            margin: auto;
+            text-align: left;
+
+            .title {
+                color: var(--WhiteColor);
+                font-size: 2rem;
+                font-weight: 700;
+                line-height: 2.5rem;
+            }
+
+            .subTitle {
+                color: var(--WhiteColor);
+                opacity: 0.9;
+                font-size: 13px;
+                font-weight: 300;
+                padding: 1rem 0;
+                max-width: 70%;
+                text-align: left;
+            }
+            .btn {
+                margin: auto;
+                padding: 0.5rem 1.5rem;
+                
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 556px) {
+    .home {
+        .secContainer {
+            .homeText {
+                .title {
+                    font-size: 2.5rem;
+                }
+
+                .subTitle {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}
+@media screen and (min-width: 720px) {
+    .home {
+        .secContainer {
+            .homeText {
+                padding: 1rem 10rem;
+            }
+            .title {
+                font-size: 3.5rem;
+                margin: auto;
+                line-height: 4rem;
+            }
+            .subTitle {
+                width: 70%;
+            }
+            
+        }
+    }
+}
+
+
+/* Home1.module.css */
+.home1-background {
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 70vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff; 
+    font-size: 2rem; 
+    position: relative;
+    opacity: 0.8;
+  }
+  

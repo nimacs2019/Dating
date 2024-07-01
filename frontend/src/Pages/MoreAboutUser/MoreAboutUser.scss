@@ -1,0 +1,112 @@
+:root {
+    --PrimaryColor: #fc6501;
+    --HoverColor: #d440a3;
+    --WhiteColor: #ffffff;
+    --BlackColor: #000000;
+    --TextColor: #7e8181;
+    --WhiteColorDeam: #fdfefe;
+    --GreyBgColor: #f0f3f4;
+    --GreyTextColor: #ecf0f1;
+    --InputColor: #f8f9f9;
+}
+
+
+.form-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+
+    h2 {
+        margin-bottom: 20px;
+        color: var(--PrimaryColor);
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+
+            .form-group {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                margin-right: 10px;
+                position: relative;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+
+                .icon{
+                    color: var(--PrimaryColor);
+                }
+
+                input {
+                    flex: 1;
+                    padding: 10px;
+                    margin-left: 10px;
+                    border: 1px solid #ccc;
+                    border-radius: 5px;
+                }
+
+                .btn {
+                    position: absolute;
+                    right: 0;
+                    bottom: 0;
+                    padding: 10px;
+                    border: none;
+                    border-radius: 4px;
+                    color: #fff;
+                    cursor: pointer;
+                    height: 100%;
+                }
+
+                svg {
+                    font-size: 24px;
+                }
+            }
+        }
+
+        .btn[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--PrimaryColor);
+            color: #fff;
+            cursor: pointer;
+            align-self: center;
+            margin-top: 20px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        form {
+            .form-row {
+                flex-direction: column;
+
+                .form-group {
+                    margin-right: 0;
+                    margin-bottom: 10px;
+
+                    input {
+                        margin-left: 0;
+                    }
+
+                    button {
+                        margin-left: 0;
+                        margin-top: 5px;
+                    }
+                }
+            }
+        }
+    }
+}

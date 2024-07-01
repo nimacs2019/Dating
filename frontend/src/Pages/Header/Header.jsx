@@ -63,28 +63,14 @@ function Header() {
                                     fill="#fc0133"
                                 ></path>
                             </svg>
-                            &nbsp; &nbsp; MysticBond
+                            &nbsp; &nbsp; App Name
                         </h1>
                     </a>
                 </div>
 
                 <div className={active}>
                     <ul className="navLists flex">
-                        <li className="navItem">
-                            <a href="/" className="navLink">
-                                Home
-                            </a>
-                        </li>
-                        <li className="navItem">
-                            <a href="/" className="navLink">
-                                Matches
-                            </a>
-                        </li>
-                        <li className="navItem">
-                            <a href="/" className="navLink">
-                                Message
-                            </a>
-                        </li>
+                        
                         <li className="navItem">
                             <a href="/" className="navLink"></a>
                         </li>
@@ -95,9 +81,9 @@ function Header() {
                             <button className="btn loginBtn">
                             <Link to="/login">Login</Link>
                             </button>
-                            <button className="btn ">
+                            {/* <button className="btn ">
                                 <Link to="/signup">SignUp</Link>
-                            </button>
+                            </button> */}
                         </div>
                     </ul>
                     <div className="closeNavBar" onClick={removeNavbar}>

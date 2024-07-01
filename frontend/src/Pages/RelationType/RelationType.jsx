@@ -10,8 +10,8 @@ function RelationType() {
         setRelationshipType(event.target.value);
     };
     const handleNext = () => {
-        if (relationshipType === "long-term") {
-            navigate("./basicInfo");
+        if (relationshipType === "short-term") {
+            navigate("/selectgender");
         } else {
         }
     };
@@ -27,6 +27,7 @@ function RelationType() {
                         onChange={handleRelationshipChange}
                     />
                     Long-term Relationship
+                    {relationshipType === "long-term" && <p>"You will be redirected to our matrimonial application."</p>}
                 </label>
                 <label>
                     <input
@@ -36,6 +37,7 @@ function RelationType() {
                         onChange={handleRelationshipChange}
                     />
                     Short-term Relationship
+                    {relationshipType === "short-term" && <p>"You will be redirected to our dating application."</p>}
                 </label>
             </div>
             <button className="btn" onClick={handleNext}>

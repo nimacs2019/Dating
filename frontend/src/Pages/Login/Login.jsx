@@ -1,28 +1,79 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Login.scss";
 
 function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+
+    // login with google
     const loginWithGoogle = () => {
         window.open("http://localhost:8080/auth/google/callback", "_self");
     };
+
+    // login
+    const handleLogin = (event) => {
+        event.preventDefault();
+
+        setError("");
+
+        if (!email || !password) {
+            setError("Both email and password are required.");
+            return;
+        }
+
+        axios
+            .post("http://localhost:8080/auth/login", { email, password })
+            .then((res) => {
+                if (res.data.success) {
+                    localStorage.setItem("token", res.data.token);
+                    localStorage.setItem("user", JSON.stringify(res.data.user));
+
+                    navigate("/home");
+                } else {
+                    setError("Invalid email or password.");
+                }
+            })
+            .catch((error) => {
+                console.error("error :", error);
+                setError("Please try again.");
+            });
+    };
+
     return (
         <section className="loginContainer">
             <div className="loginForm">
                 <h2>Login</h2>
                 <form>
                     <label>
-                        Email:
-                        <input type="email" name="email" />
+                        <input
+                            placeholder="Email:"
+                            type="email"
+                            name="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </label>
                     <label>
-                        Password:
-                        <input type="password" name="password" />
+                        <input
+                            placeholder="Password:"
+                            type="password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </label>
                     <div className="forgotten-password">
                         <a href="/forgot-password">Forgotten password?</a>
                     </div>
-                    <button type="submit">Login</button>
+                    <button type="submit" onClick={handleLogin}>
+                        Login
+                    </button>
+
+                    <p style={{ textAlign: "center", color: "red" }}>{error}</p>
                     <p style={{ textAlign: "center" }}>or</p>
                     <button type="button" className="google-login-button" onClick={loginWithGoogle}>
                         Login using Google
