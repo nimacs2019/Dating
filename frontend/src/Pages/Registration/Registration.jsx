@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import axios from "axios";
 import {
     FaUser,
@@ -13,6 +13,7 @@ import {
     FaEnvelope,
     FaLock,
     FaPhone,
+    FaPlus,
 } from "react-icons/fa";
 import "./Registration.scss";
 import { ModalContext } from "../../ModelContextProvider/ModelContextProvider";
@@ -25,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 
 const Registration = () => {
     const { openModal, closeModal } = useContext(ModalContext);
+    const fileInputRef = useRef(null);
 
     const [userData, setUserData] = useState({
         name: "",
@@ -34,9 +36,9 @@ const Registration = () => {
         dob: "",
         age: "",
         hobbies: [],
-        interest: [],
-        smokingHabbits: "",
-        drinkingHabbits: "",
+        interests: [],
+        smokingHabits: "",
+        drinkingHabits: "",
         qualification: "",
         profilePicture: null,
         moreImages: [],
@@ -51,16 +53,40 @@ const Registration = () => {
             ...prevData,
             [name]: value,
         }));
+        console.log("Input values ", userData);
     };
+
+    // const handleFileChange = (e) => {
+    //     const { name, files } = e.target;
+    //     console.log("Values of E.target", e.target);
+    //     console.log("Selected files:", files);
+    //     console.log("Selected files:", e.target.name);
+    //     setUserData((prevData) => ({
+    //         ...prevData,
+    //         [name]: name === "profilePicture" ? files[0] : Array.from(files),
+    //     }));
+    // };
 
     const handleFileChange = (e) => {
         const { name, files } = e.target;
-        setUserData((prevData) => ({
-            ...prevData,
-            [name]: name === "profilePicture" ? files[0] : Array.from(files),
-        }));
-    };
+        console.log("Selected files:", files);
 
+        setUserData((prevData) => {
+            let updatedData;
+            if (name === "profilePicture") {
+                updatedData = files.length > 0 ? files[0] : null; // Store only the first file
+            } else if (name === "reels") {
+                updatedData = [...(prevData.reels || []), ...Array.from(files)];
+            } else {
+                updatedData = [...(prevData.moreImages || []), ...Array.from(files)];
+            }
+           
+            return {
+                ...prevData,
+                [name]: updatedData,
+            };
+        });
+    };
     const handleHobbies = () => {
         openModal(
             <Hobbies
@@ -74,7 +100,7 @@ const Registration = () => {
         openModal(
             <Interests
                 closeModal={closeModal}
-                setSelectedInterests={(interest) => setUserData((prevData) => ({ ...prevData, interest }))}
+                setSelectedInterests={(interests) => setUserData((prevData) => ({ ...prevData, interests }))}
             />
         );
     };
@@ -83,7 +109,7 @@ const Registration = () => {
         openModal(
             <SmokingHabbits
                 closeModal={closeModal}
-                setSelectedSmokingHabbits={(smokingHabbits) => setUserData((prevData) => ({ ...prevData, smokingHabbits }))}
+                setSelectedSmokingHabbits={(smokingHabits) => setUserData((prevData) => ({ ...prevData, smokingHabits }))}
             />
         );
     };
@@ -92,8 +118,8 @@ const Registration = () => {
         openModal(
             <DrinkingHabbits
                 closeModal={closeModal}
-                setSelectedDrinkingHabbits={(drinkingHabbits) =>
-                    setUserData((prevData) => ({ ...prevData, drinkingHabbits }))
+                setSelectedDrinkingHabbits={(drinkingHabits) =>
+                    setUserData((prevData) => ({ ...prevData, drinkingHabits }))
                 }
             />
         );
@@ -115,15 +141,20 @@ const Registration = () => {
         const formData = new FormData();
 
         formData.append("name", userData.name);
+        formData.append("email", userData.email);
+        formData.append("mob", userData.mob);
+        formData.append("password", userData.password);
         formData.append("dob", userData.dob);
         formData.append("age", userData.age);
         formData.append("hobbies", JSON.stringify(userData.hobbies));
-        formData.append("interest", JSON.stringify(userData.interest));
-        formData.append("smokingHabbits", userData.smokingHabbits);
-        formData.append("drinkingHabbits", userData.drinkingHabbits);
+        formData.append("interests", JSON.stringify(userData.interests));
+        formData.append("smokingHabits", userData.smokingHabits);
+        formData.append("drinkingHabits", userData.drinkingHabits);
         formData.append("qualification", userData.qualification);
         formData.append("profilePicture", userData.profilePicture);
-        userData.moreImages.forEach((image) => formData.append("moreImages", image));
+        if (userData.moreImages) {
+            userData.moreImages.forEach((image) => formData.append("moreImages", image));
+        }
         userData.reels.forEach((reel) => formData.append("reels", reel));
 
         for (let pair of formData.entries()) {
@@ -136,13 +167,15 @@ const Registration = () => {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            if (response.status === 200) {
+            console.log("Response status:", response.status);
+            if (response.status === 201) {
                 console.log("submitted successfully");
+                alert("submitted successfully");
+                navigate("/service-category");
             }
         } catch (error) {
             console.error("Error :", error.message);
         }
-        navigate('/employment')
     };
 
     return (
@@ -251,9 +284,9 @@ const Registration = () => {
                         <input
                             onClick={handleInterests}
                             placeholder="Interest:"
-                            value={userData.interest.join(", ")}
+                            value={userData.interests.join(", ")}
                             type="text"
-                            name="interest"
+                            name="interests"
                             readOnly
                         />
                     </label>
@@ -265,9 +298,9 @@ const Registration = () => {
                         </div>
                         <input
                             type="text"
-                            name="smokingHabbits"
+                            name="smokingHabits"
                             placeholder="Smoking Habits:"
-                            value={userData.smokingHabbits}
+                            value={userData.smokingHabits}
                             onClick={handleSmokingHabbits}
                             readOnly
                         />
@@ -278,8 +311,8 @@ const Registration = () => {
                         </div>
                         <input
                             type="text"
-                            name="drinkingHabbits"
-                            value={userData.drinkingHabbits}
+                            name="drinkingHabits"
+                            value={userData.drinkingHabits}
                             onClick={handleDrinkingHabbits}
                             placeholder="Drinking Habits:"
                             readOnly
@@ -307,7 +340,7 @@ const Registration = () => {
                             <FaImage />
                         </div>
                         Add Profile Picture:
-                        <input type="file" name="profilePicture" onChange={handleFileChange} />
+                        <input type="file" name="profilePicture" onChange ={handleFileChange} />
                     </label>
                 </div>
                 <div className="form-row">
@@ -316,7 +349,10 @@ const Registration = () => {
                             <FaImage />
                         </div>
                         Add More Images:
-                        <input type="file" name="moreImages" multiple onChange={handleFileChange} />
+                        <input type="file" name="moreImages" multiple onChange ={handleFileChange} ref={fileInputRef} />
+                        <button type="button" onClick={() => fileInputRef.current.click()}>
+                            <FaPlus />
+                        </button>
                     </label>
                 </div>
                 <div className="form-row">
@@ -325,7 +361,7 @@ const Registration = () => {
                             <FaVideo />
                         </div>
                         Add Short Reels: &nbsp;
-                        <input type="file" name="reels" multiple onChange={handleFileChange} />
+                        <input type="file" name="reels" multiple onChange ={handleFileChange} />
                     </label>
                 </div>
                 <div className="form-row">
@@ -337,5 +373,4 @@ const Registration = () => {
         </div>
     );
 };
-
 export default Registration;

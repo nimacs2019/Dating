@@ -1,6 +1,6 @@
 const passport = require("passport");
 const OAuth2Strategy = require("passport-google-oauth2").Strategy;
-const {User} = require("../database/model/userSchema"); 
+const User = require("../database/model/userSchema"); 
 require("dotenv").config();
 
 // Setup Google authentication

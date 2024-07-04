@@ -1,18 +1,37 @@
 import React, { useState } from "react";
 import "./Employment.scss";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Employment = () => {
-    const [selectedOption, setSelectedOption] = useState("");
-    const navigate = useNavigate()
+    const [employmentType, setEmploymentType] = useState("");
+    const [companyName, setCompanyName] = useState("");
+    const [designation, setDesignation] = useState("");
+    const [location, setLocation] = useState("");
+    const [expertiseLevel, setExpertiseLevel] = useState("");
 
-    const handleOptionChange = (e) => {
-        setSelectedOption(e.target.value);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        // navigate("/relationType");
+
+        const employeeDetails =
+            employmentType === "Jobseeker"
+                ? { employmentType, expertiseLevel }
+                : { employmentType, companyName, designation, location };
+
+        console.log("Employement Details ", employeeDetails, { withCredentials: true });
+        try {
+            const response = await axios.post("http://localhost:8080/api/employment", employeeDetails, {
+                
+            });
+            console.log("Employment Response data:", response.data);
+            navigate("/relationType");
+        } catch (error) {
+            console.error("Error in submitting Employment data:", error);
+        }
     };
-
-    const handleSubmit = ()=>{
-        navigate('./relationType')
-    }
 
     return (
         <div className="form-container">
@@ -22,8 +41,8 @@ const Employment = () => {
                     <input
                         type="radio"
                         value="Employee"
-                        checked={selectedOption === "Employee"}
-                        onChange={handleOptionChange}
+                        checked={employmentType === "Employee"}
+                        onChange={(e) => setEmploymentType(e.target.value)}
                     />
                     Employee
                 </label>
@@ -31,8 +50,8 @@ const Employment = () => {
                     <input
                         type="radio"
                         value="Employer"
-                        checked={selectedOption === "Employer"}
-                        onChange={handleOptionChange}
+                        checked={employmentType === "Employer"}
+                        onChange={(e) => setEmploymentType(e.target.value)}
                     />
                     Employer
                 </label>
@@ -40,47 +59,80 @@ const Employment = () => {
                     <input
                         type="radio"
                         value="Jobseeker"
-                        checked={selectedOption === "Jobseeker"}
-                        onChange={handleOptionChange}
+                        checked={employmentType === "Jobseeker"}
+                        onChange={(e) => setEmploymentType(e.target.value)}
                     />
                     Jobseeker
                 </label>
             </div>
 
-            {selectedOption === "Employee" || selectedOption === "Employer" ? (
+            {employmentType === "Employee" || employmentType === "Employer" ? (
                 <div className="form-section">
                     <h2>Fill the Form</h2>
                     <form>
                         <div>
                             <label>Company Name:</label>
-                            <input type="text" name="companyName" />
+                            <input
+                                type="text"
+                                name="companyName"
+                                value={companyName}
+                                onChange={(e) => setCompanyName(e.target.value)}
+                            />
                         </div>
                         <div>
                             <label>Designation:</label>
-                            <input type="text" name="designation" />
+                            <input
+                                type="text"
+                                name="designation"
+                                value={designation}
+                                onChange={(e) => setDesignation(e.target.value)}
+                            />
                         </div>
                         <div>
                             <label>Location:</label>
-                            <input type="text" name="location" />
+                            <input
+                                type="text"
+                                name="location"
+                                value={location}
+                                onChange={(e) => setLocation(e.target.value)}
+                            />
                         </div>
                     </form>
                 </div>
             ) : null}
 
-            {selectedOption === "Jobseeker" ? (
+            {employmentType === "Jobseeker" ? (
                 <div className="form-section">
                     <h2>Expertise Level</h2>
                     <div className="radio-buttons">
                         <label>
-                            <input type="radio" value="Fresher" name="expertise" />
+                            <input
+                                type="radio"
+                                value="Fresher"
+                                name="expertise"
+                                checked={expertiseLevel === "Fresher"}
+                                onChange={(e) => setExpertiseLevel(e.target.value)}
+                            />
                             Fresher
                         </label>
                         <label>
-                            <input type="radio" value="Intermediate" name="expertise" />
+                            <input
+                                type="radio"
+                                value="Intermediate"
+                                name="expertise"
+                                checked={expertiseLevel === "Intermediate"}
+                                onChange={(e) => setExpertiseLevel(e.target.value)}
+                            />
                             Intermediate
                         </label>
                         <label>
-                            <input type="radio" value="Experienced" name="expertise" />
+                            <input
+                                type="radio"
+                                value="Experienced"
+                                name="expertise"
+                                checked={expertiseLevel === "Experienced"}
+                                onChange={(e) => setExpertiseLevel(e.target.value)}
+                            />
                             Experienced
                         </label>
                     </div>

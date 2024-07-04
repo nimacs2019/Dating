@@ -14,6 +14,7 @@ import Home1 from "../Pages/Home/Home1";
 import { ModelContextProvider } from "../ModelContextProvider/ModelContextProvider";
 import Model from "../ModelContextProvider/Model";
 import Employment from "../Pages/Employment/Employment";
+import ServiceCategory from "../Pages/ServiceCategory/ServiceCategory";
 
 function Routing() {
     const location = useLocation();
@@ -37,12 +38,13 @@ function Routing() {
                     <Route path="/signup" element={<SignUpForm />} />
                     <Route path="/otp" element={<Otp />} />
                     <Route path="/registration" element={<Registration />} />
-                    <Route path="/employment/relationType" element={<RelationType />} />
+                    <Route path="/relationType" element={<RelationType />} />
                     <Route path="/relationType/basicUserData" element={<Home />} />
                     <Route path="/add-detailed-data" element={<MoreAboutUser />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/selectgender" element={<SelectGender/>} />
                     <Route path="/employment" element={<Employment/>}/>
+                    <Route path="/service-category" element={<ServiceCategory/>}/>
                 </Routes>
                 <Model/>
             </ModelContextProvider>

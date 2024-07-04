@@ -1,38 +1,52 @@
 const express = require("express");
-const upload = require('../Middlewares/multer')
+const upload = require("../Middlewares/multer");
 const router = express.Router();
-const bcrypt = require('bcrypt')
-const { User, UserData } = require("../database/model/userSchema");
+const bcrypt = require("bcrypt");
+const User = require("../database/model/userSchema");
+const UserData = require("../database/model/userDataSchema");
 
-// Create a User (register)
 router.post(
     "/api/registration",
     upload.fields([
         { name: "profilePicture", maxCount: 1 },
         { name: "moreImages", maxCount: 5 },
-        { name: "reels", maxCount: 1 }
+        { name: "reels", maxCount: 1 },
     ]),
     async (req, res) => {
-        console.log("User entered details  ", req.body);
-        console.log("User entered Image files  ",req.files);
-        const { email, phone, ...userData } = req.body;
+        console.log("User entered details:", req.body);
+        console.log("User entered Image files:", req.files);
 
-        if (!email && !phone) {
-            return res.status(400).json({ message: "Email or phone is required" });
-        }
+        const { name, email, mob, password, dob, age, hobbies, interests, smokingHabits, drinkingHabits, qualification } =
+            req.body;
 
         try {
-            // Check if the user already exists
-            let user = await User.findOne({ $or: [{ email }, { phone }] });
+            let user = await User.findOne({ $or: [{ email }, { mob }] });
 
             if (user) {
-                user.name = req.body.name
-                user.mob = req.body.mob;
-                user.email = req.body.email;
-                user.password = await bcrypt.hash(password,10)
-                console.log('Updated Details ',user.name,user.mob,user.email,user.password);
-                return res.status(400).json({ message: "User already exists" });
-            } else {
+                user.displayName = name;
+                user.mob = mob;
+                user.email = email;
+                if (password) {
+                    user.password = await bcrypt.hash(password, 10);
+                }
+
+                console.log("Updated Details:", user.displayName, user.mob, user.email, user.password);
+                await user.save();
+
+                const userData = {
+                    name,
+                    email,
+                    mob,
+                    password: await bcrypt.hash(password, 10),
+                    dob,
+                    age,
+                    hobbies,
+                    interests,
+                    smokingHabits,
+                    drinkingHabits,
+                    qualification,
+                };
+
                 if (req.files.profilePicture) {
                     userData.profilePicture = req.files.profilePicture[0].path;
                 }
@@ -42,13 +56,16 @@ router.post(
                 if (req.files.reels) {
                     userData.reels = req.files.reels[0].path;
                 }
-                // Create a new user
-                user = new UserData({ email, phone, ...userData });
-                await user.save();
-                return res.status(201).json(user);
+
+                const newUser = new UserData(userData);
+                await newUser.save();
+                return res.status(201).json(newUser);
+            } else {
+                return res.status(404).json({ message: "User does not exist" });
             }
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            console.error("Error:", error);
+            return res.status(500).json({ error: error.message });
         }
     }
 );

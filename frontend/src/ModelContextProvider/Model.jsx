@@ -4,7 +4,6 @@ import "./Model.scss"
 
 const Model = () => {
     const { isOpen, closeModal, content } = useContext(ModalContext);
-    console.log('fffffffff',content);
 
     if (!isOpen) return null;
 

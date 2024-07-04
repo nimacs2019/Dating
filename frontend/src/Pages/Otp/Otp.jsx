@@ -13,24 +13,23 @@ const Otp = ({ userNumber }) => {
         setOtp(e.target.value);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        setError("");
-        setSuccess("");
-    
-        axios.post('http://localhost:8080/otp', { otp, userNumber })
-          .then((res) => {
-            if (res.data.resp.valid) {
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      setError("");
+      setSuccess("");
+  
+      try {
+          const res = await axios.post('http://localhost:8080/otp', { otp, userNumber });
+          if (res.data.resp.valid) {
               setSuccess("OTP verified successfully!");
-            } else {
+          } else {
               setError("Expired OTP");
-            }
-          })
-          .catch((error) => {
-            console.error("There was an error making the request:", error);
-            setError("Failed to verify OTP. Please try again.");
-          });
-      };
+          }
+      } catch (error) {
+          console.error("There was an error making the request:", error);
+          setError("Failed to verify OTP. Please try again.");
+      }
+  };
 
     return (
        <secton className="otpContainer">

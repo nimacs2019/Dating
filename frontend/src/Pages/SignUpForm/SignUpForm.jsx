@@ -58,6 +58,14 @@ const SignUpForm = () => {
             <div className="signUpForm">
                 <h2>Sign Up</h2>
                 <form>
+
+                <label>
+                        Name:
+                        <div className="inputField">
+                            <input type="text" />
+                        </div>{" "}
+                    </label>
+
                     <label>
                         Phone Number:
                         <div className="inputField">
