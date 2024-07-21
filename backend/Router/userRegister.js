@@ -1,12 +1,15 @@
 const express = require("express");
-const upload = require("../Middlewares/multer");
 const router = express.Router();
+const upload = require("../Middlewares/multer");
 const bcrypt = require("bcrypt");
+const path = require('path');
 const User = require("../database/model/userSchema");
 const UserData = require("../database/model/userDataSchema");
+const authenticateToken = require("../Middlewares/jwtAuth");
 
 router.post(
     "/api/registration",
+    authenticateToken,
     upload.fields([
         { name: "profilePicture", maxCount: 1 },
         { name: "moreImages", maxCount: 5 },
@@ -15,9 +18,26 @@ router.post(
     async (req, res) => {
         console.log("User entered details:", req.body);
         console.log("User entered Image files:", req.files);
+        console.log("User id", req.user);
+        const { _id } = req.user;
 
-        const { name, email, mob, password, dob, age, hobbies, interests, smokingHabits, drinkingHabits, qualification } =
-            req.body;
+        const {
+            name,
+            email,
+            mob,
+            password,
+            confirmPassword,
+            dob,
+            age,
+            gender,
+            dist,
+            hobbies,
+            interests,
+            smokingHabits,
+            drinkingHabits,
+            qualification,
+            job,
+        } = req.body;
 
         try {
             let user = await User.findOne({ $or: [{ email }, { mob }] });
@@ -26,6 +46,7 @@ router.post(
                 user.displayName = name;
                 user.mob = mob;
                 user.email = email;
+
                 if (password) {
                     user.password = await bcrypt.hash(password, 10);
                 }
@@ -34,27 +55,32 @@ router.post(
                 await user.save();
 
                 const userData = {
+                    userId: _id,
                     name,
                     email,
                     mob,
                     password: await bcrypt.hash(password, 10),
+                    confirmPassword: await bcrypt.hash(password, 10),
                     dob,
                     age,
+                    gender,
+                    dist,
                     hobbies,
                     interests,
                     smokingHabits,
                     drinkingHabits,
                     qualification,
+                    job,
                 };
 
                 if (req.files.profilePicture) {
-                    userData.profilePicture = req.files.profilePicture[0].path;
+                    userData.profilePicture = path.relative(__dirname,req.files.profilePicture[0].path);
                 }
                 if (req.files.moreImages) {
-                    userData.moreImages = req.files.moreImages.map((file) => file.path);
+                    userData.moreImages = req.files.moreImages.map((file) => path.relative(__dirname, file.path));
                 }
                 if (req.files.reels) {
-                    userData.reels = req.files.reels[0].path;
+                    userData.reels = path.relative(__dirname, req.files.reels[0].path);
                 }
 
                 const newUser = new UserData(userData);

@@ -1,118 +1,88 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Dashboard.scss";
 
 function Dashboard() {
-    const users = [
-        {
-            id: 1,
-            name: "John ",
-            location: "New York, USA",
-            img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 2,
-            name: "Arun ",
-            location: "London, UK",
-            img: "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 3,
-            name: "Bob Johnson",
-            location: "Sydney, Australia",
-            img: "https://plus.unsplash.com/premium_photo-1670071482460-5c08776521fe?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 4,
-            name: "Alice Davis",
-            location: "Tokyo, Japan",
-            img: "https://images.unsplash.com/photo-1678286742832-26543bb49959?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 5,
-            name: "John ",
-            location: "New York, USA",
-            img: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 6,
-            name: "Bob Johnson",
-            location: "Sydney, Australia",
-            img: "https://images.unsplash.com/photo-1554260570-9140fd3b7614?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 7,
-            name: "Arun ",
-            location: "London, UK",
-            img: "https://plus.unsplash.com/premium_photo-1664541336896-b3d5f7dec9a3?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 8,
-            name: "Linda Clark",
-            location: "Berlin, Germany",
-            img: "https://plus.unsplash.com/premium_photo-1664541336896-b3d5f7dec9a3?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 9,
-            name: "Daniel Lewis",
-            location: "Barcelona, Spain",
-            img: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 10,
-            name: "John ",
-            location: "New York, USA",
-            img: "https://images.unsplash.com/photo-1678286742832-26543bb49959?q=80&w=1888&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 11,
-            name: "Arun ",
-            location: "London, UK",
-            img: "https://plus.unsplash.com/premium_photo-1670071482460-5c08776521fe?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-        {
-            id: 12,
-            name: "Karen Allen",
-            location: "Amsterdam, Netherlands",
-            img: "https://plus.unsplash.com/premium_photo-1664541336896-b3d5f7dec9a3?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        },
-    ];
+    const [users, setUsers] = useState([]);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const userData = (usersSubset) => {
-        return usersSubset.map((user) => (
-          <div key={user.id} className="card">
-            <img src={user.img} alt={user.name} />
-            <div className="card-bottom">
-              <h3>{user.name}</h3>
-              <p>{user.location}</p>
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [userResponse, profileResponse] = await Promise.all([
+                    axios.get("http://localhost:8080/api/user-details", { withCredentials: true }),
+                    axios.get("http://localhost:8080/api/my-profile", { withCredentials: true }),
+                ]);
+
+                
+                setUsers(userResponse.data);
+                setCurrentUser(profileResponse.data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Error fetching data", error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    const filterUsersByLocation = (location) => {
+        return users.filter((user) => user.dist === location && user._id !== currentUser._id);
+    };
+
+    const filterUsersByJob = (job) => {
+        return users.filter((user) => user.job === job && user._id !== currentUser._id);
+    };
+
+    const filterUsersByQualification = (qualification) => {
+        return users.filter((user) => user.qualification === qualification && user._id !== currentUser._id);
+    };
+
+    const handleCardClick = (userId) => {
+        navigate(`/user/${userId}`);
+    };
+
+    const renderUserData = (filteredUsers) => {
+        return filteredUsers.map((user) => (
+            <div key={user._id} className="card" onClick={() => handleCardClick(user.userId)}>
+                <img src={`http://localhost:8080/${user.profilePicture}`} alt="photo" />
+                <div className="card-bottom">
+                    <h3>{user.name}</h3>
+                    <p>{user.dist}</p>
+                </div>
             </div>
-          </div>
         ));
-      };
-
+    };
 
     return (
         <div className="nearby-users">
             <h1>Who's Nearby?</h1>
-            <div className="section">
-          <button className="btn">Distance</button>
-          <div className="cards-container">
-            {userData(users.slice(0, 4))}
-          </div>
-        </div>
-        
-        <div className="section">
-          <button className="btn">Job</button>
-          <div className="cards-container">
-            {userData(users.slice(4, 8))}
-          </div>
-        </div>
 
-        <div className="section">
-          <button className="btn">Interest</button>
-          <div className="cards-container">
-            {userData(users.slice(8, 12))}
-          </div>
-        </div>
+            <div className="section">
+                <h2>Distance</h2>
+                <div className="cards-container">{renderUserData(filterUsersByLocation(currentUser.dist))}</div>
+            </div>
+
+            <div className="section">
+                <h2>Job</h2>
+                <div className="cards-container">{renderUserData(filterUsersByJob(currentUser.job))}</div>
+            </div>
+
+            <div className="section">
+                <h2>Qualification</h2>
+                <div className="cards-container">
+                    {renderUserData(filterUsersByQualification(currentUser.qualification))}
+                </div>
+            </div>
         </div>
     );
 }

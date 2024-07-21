@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Employment.scss";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Employment = () => {
     const [employmentType, setEmploymentType] = useState("");
@@ -9,23 +10,41 @@ const Employment = () => {
     const [designation, setDesignation] = useState("");
     const [location, setLocation] = useState("");
     const [expertiseLevel, setExpertiseLevel] = useState("");
+    const [token, setToken] = useState(null);
+    const [loading, setLoading] = useState(true); 
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const allCookies = document.cookie;
+        console.log("All Cookies:", allCookies);
+        const token = Cookies.get("jwt");
+        if (token) {
+            console.log("Token found:", token);
+        } else {
+            console.log("Token not found");
+        }
+    }, []);
+
+    console.log(".......", token);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // navigate("/relationType");
 
         const employeeDetails =
             employmentType === "Jobseeker"
                 ? { employmentType, expertiseLevel }
                 : { employmentType, companyName, designation, location };
 
-        console.log("Employement Details ", employeeDetails, { withCredentials: true });
+        console.log("Employement Details ", employeeDetails);
         try {
             const response = await axios.post("http://localhost:8080/api/employment", employeeDetails, {
-                
+                headers: {
+                    "Content-type": "application/json",
+                },
+                withCredentials: true,
             });
+
             console.log("Employment Response data:", response.data);
             navigate("/relationType");
         } catch (error) {

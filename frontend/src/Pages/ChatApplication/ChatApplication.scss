@@ -1,0 +1,74 @@
+.Chat {
+    display: flex;
+    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  
+    .Left-side-chat, .Right-side-chat {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .Left-side-chat {
+      width: 30%;
+      background: #f0f0f0;
+      border-right: 1px solid #ddd;
+      overflow-y: auto;
+  
+      .Chat-container {
+        padding: 20px;
+  
+        h2 {
+          margin-bottom: 20px;
+          color: #333;
+        }
+  
+        .Chat-list {
+          .conversation {
+            cursor: pointer;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            transition: background 0.3s ease;
+  
+            &:hover {
+              background: #e5e5e5;
+            }
+          }
+        }
+      }
+    }
+  
+    .Right-side-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+  
+      .NavIcons {
+        width: 20rem;
+        align-self: flex-end;
+      }
+    }
+  
+    .ChatWindow-container {
+      flex: 1;
+    }
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .Chat {
+      flex-direction: column;
+  
+      .Left-side-chat {
+        width: 100%;
+        height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+  
+      .Right-side-chat {
+        height: 50vh;
+      }
+    }
+  }
+  

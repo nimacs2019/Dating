@@ -18,13 +18,14 @@ router.get(
         try {
             const user = req.user;
             // Generate JWT Token
-            const token = jwt.sign({ userid: user._id, email: user.email }, process.env.SECRET_KEY, { expiresIn: '1d' });
-            console.log('New Token ',token);
-            console.log("Setting cookies for user:", user);
+            const token = jwt.sign({ userid: user._id, email: user.email }, process.env.SECRET_KEY, { expiresIn: "1d" });
 
             if (!token) {
-                return res.status(404).json({ message: 'Token not found' });
-              }
+                return res.status(404).json({ message: "Token not found" });
+            }
+
+            console.log("Setting cookies for user:", user);
+            console.log("Generated Token:", token);
 
             // Set the JWT token in a cookie
             res.cookie("jwt", token, {
@@ -45,10 +46,18 @@ router.get(
                 sameSite: "strict",
                 path: "/",
             });
+
+            res.cookie("jwt", token);
+
             // Check user type and redirect accordingly
-            checkUserType(req, res, next);
+            if (req.user && req.user.isNewUser) {
+                // Redirect new user to the registration page
+                return res.redirect("http://localhost:3000/registration");
+            } else {
+                // Redirect existing user to the dashboard
+                return res.redirect("http://localhost:3000/dashboard");
+            }
         } catch (error) {
-            console.error("Error in Google auth callback:", error);
             res.redirect("http://localhost:3000/login");
         }
     }

@@ -1,6 +1,6 @@
 const passport = require("passport");
 const OAuth2Strategy = require("passport-google-oauth2").Strategy;
-const User = require("../database/model/userSchema"); 
+const User = require("../database/model/userSchema");
 require("dotenv").config();
 
 // Setup Google authentication
@@ -50,22 +50,8 @@ passport.deserializeUser(async (obj, done) => {
         if (user) {
             user.isNewUser = obj.isNewUser; // Restore the isNewUser flag
             done(null, user);
-        } else {
-            done(new Error("User not found"), null);
         }
     } catch (err) {
         done(err, null);
     }
 });
-
-function checkUserType(req, res, next) {
-    if (req.user && req.user.isNewUser) {
-        // Redirect new user to the registration page
-        return res.redirect("http://localhost:3000/registration");
-    } else {
-        // Redirect existing user to the dashboard
-        return res.redirect("http://localhost:3000/dashboard");
-    }
-}
-
-module.exports = {checkUserType};

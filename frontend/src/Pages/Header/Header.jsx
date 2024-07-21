@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.scss";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function Header() {
     const [active, setAcive] = useState("navBar");
+    const [navLinkColor, setNavLinkColor] = useState("navLink");
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
 
     const showNavbar = () => {
         setAcive("navBar activeNavbar");
@@ -21,18 +25,44 @@ function Header() {
     const addBG = () => {
         if (window.scrollY >= 10) {
             setTransperent("header activeHeader");
+            setNavLinkColor("navLink activeNavLink");
         } else {
             setTransperent("header");
+            setNavLinkColor("navLink ");
         }
     };
 
     window.addEventListener("scroll", addBG);
+
+    const checkAuthStatus = () => {
+        const connectionId = Cookies.get("connect.sid");
+        const userToken = Cookies.get("jwt");
+
+        // console.log("Connection ID:", connectionId);
+        // console.log("User Token:", userToken);
+
+        setIsLoggedIn(!!connectionId || !!userToken);
+
+        // console.log("All Cookies:", Cookies.get());
+    };
+
+    const handleLogout = () => {
+        Cookies.remove("connect.sid");
+        Cookies.remove("jwt");
+        setIsLoggedIn(false);
+        navigate("/login");
+    };
+
+    useEffect(() => {
+        checkAuthStatus();
+    }, []);
+
     return (
         <section className="navBarSection">
             <div className={transperent}>
                 <div className="logoDiv">
                     <a href="/" className="logo">
-                        <h1 className="flex" >
+                        <h1 className="flex">
                             {" "}
                             <svg
                                 id="logo-15"
@@ -70,20 +100,66 @@ function Header() {
 
                 <div className={active}>
                     <ul className="navLists flex">
-                        
-                        <li className="navItem">
-                            <a href="/" className="navLink"></a>
-                        </li>
-                        <li className="navItem">
-                            <a href="/" className="navLink"></a>
-                        </li>
+                        {isLoggedIn && (
+                            <>
+                                <li className="navItem">
+                                    <Link to="/dashboard" className={navLinkColor}>
+                                        Home
+                                    </Link>
+                                </li>
+                                <li className="navItem">
+                                    <Link to="/view-request-sentList" className={navLinkColor}>
+                                        Sent
+                                    </Link>
+                                </li>
+                                <li className="navItem">
+                                    <Link to="/view-request-accepted" className={navLinkColor}>
+                                        Accept
+                                    </Link>
+                                </li>
+                                <li className="navItem">
+                                    <Link to="/view-request-rejected" className={navLinkColor}>
+                                        Reject
+                                    </Link>
+                                </li>
+                                <li className="navItem">
+                                    <Link to="/view-request-received" className={navLinkColor}>
+                                        Received
+                                    </Link>
+                                </li>
+                                <li className="navItem">
+                                    <Link to="/view-shortlisted" className={navLinkColor}>
+                                        Shortlisted
+                                    </Link>
+                                </li>
+                                <li className="navItem">
+                                    <Link to="/view-shortlistedBy" className={navLinkColor}>
+                                        ShortlistedBy
+                                    </Link>
+                                </li>
+                                <li className="navItem">
+                                    <Link to="/chat-application" className={navLinkColor}>
+                                        Message
+                                    </Link>
+                                </li>
+                                <li className="navItem">
+                                    <Link to="/my-profile" className={navLinkColor}>
+                                        Profile
+                                    </Link>
+                                </li>
+                            </>
+                        )}
+
                         <div className="authbtns flex">
-                            <button className="btn loginBtn">
-                            <Link to="/login">Login</Link>
-                            </button>
-                            {/* <button className="btn ">
-                                <Link to="/signup">SignUp</Link>
-                            </button> */}
+                            {isLoggedIn ? (
+                                <button className="btn logoutBtn" onClick={handleLogout}>
+                                    Logout
+                                </button>
+                            ) : (
+                                <button className="btn loginBtn">
+                                    <Link to="/login">Login</Link>
+                                </button>
+                            )}
                         </div>
                     </ul>
                     <div className="closeNavBar" onClick={removeNavbar}>

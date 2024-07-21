@@ -15,7 +15,7 @@ function Login() {
     };
 
     // login
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
 
         setError("");
@@ -25,22 +25,22 @@ function Login() {
             return;
         }
 
-        axios
-            .post("http://localhost:8080/auth/login", { email, password })
-            .then((res) => {
-                if (res.data.success) {
-                    localStorage.setItem("token", res.data.token);
-                    localStorage.setItem("user", JSON.stringify(res.data.user));
-
-                    navigate("/home");
-                } else {
-                    setError("Invalid email or password.");
-                }
-            })
-            .catch((error) => {
-                console.error("error :", error);
-                setError("Please try again.");
-            });
+        try {
+            const res = await axios.post(
+                "http://localhost:8080/auth/login",
+                { email, password },
+                { withCredentials: true }
+            );
+            if (res.data.success) {
+                alert("login Successful");
+                navigate("/dashboard");
+            } else {
+                setError("Invalid email or password.");
+            }
+        } catch (error) {
+            console.error("error :", error);
+            setError("Please try again.");
+        }
     };
 
     return (

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./RelationType.scss";
 
@@ -9,10 +10,30 @@ function RelationType() {
     const handleRelationshipChange = (event) => {
         setRelationshipType(event.target.value);
     };
-    const handleNext = () => {
+    const handleNext = async () => {
+        if (!relationshipType) {
+            alert("Please select any option regarding the duration of the relationship");
+        }
+
         if (relationshipType === "short-term") {
-            navigate("/selectgender");
-        } else {
+            try {
+                const response = await axios.post(
+                    "http://localhost:8080/api/relationship-Duration",
+                    { relationshipType: relationshipType },
+                    { withCredentials: true }
+                );
+                if (response.data.success) {
+                    navigate("/selectgender");
+                } else {
+                    console.log("Error in submitting data");
+                }
+            } catch (error) {
+                console.error("Error :", error.message);
+            }
+        } else if (relationshipType === "long-term") {
+            if (window.confirm("Do you want to visit the matrimony page?")) {
+                navigate("/matrimony-splash");
+            }
         }
     };
     return (

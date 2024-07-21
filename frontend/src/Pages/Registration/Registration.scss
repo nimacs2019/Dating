@@ -28,8 +28,6 @@ h2 {
         display: flex;
         justify-content: space-between;
         margin-bottom: 1rem;
-
-        
     }
 
     label {
@@ -46,19 +44,88 @@ h2 {
         input[type="text"],
         input[type="date"],
         input[type="number"],
-        input[type="file"] ,
+        input[type="file"],
         input[type="email"],
-        input[type="password"]{
+        input[type="password"] {
             flex: 1;
             padding: 0.5rem;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
     }
+    .preview-container {
+        margin-top: 10px;
+        height: 10%;
+        width: 50%;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        object-fit: cover;
+        border-radius: 10px;
+        cursor: pointer;
+
+        .preview-image img {
+            max-width: 100px;
+            max-height: 100px;
+            // width: 100%;
+            // height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .preview-containerMoreImages {
+        height: auto;
+        width: 70%;
+        border: 1px solid #ccc;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        max-width: 100%;
+        box-sizing: border-box;
+        border-radius: 10px;
+
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    }
+
+    .preview-containerReels {
+        height: auto;
+        width: 70%;
+        border: 1px solid #ccc;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        max-width: 100%;
+        box-sizing: border-box;
+        border-radius: 10px;
+
+        .preview-video {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    }
 }
 
 .btn {
-    padding: 0.5rem .5rem;
+    padding: 0.5rem 0.5rem;
     margin: auto;
     font-size: 1rem;
     background-color: #fc6501;
@@ -87,4 +154,3 @@ h2 {
         margin: 0.5rem 0;
     }
 }
-

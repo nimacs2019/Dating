@@ -28,6 +28,7 @@ router.post("/mobile", (req, res) => {
 
 router.post("/otp", (req, res) => {
   const { otp, userNumber } = req.body;
+  console.log('otp request body',req.body);
   if (!otp || !userNumber) {
     return res.status(400).json({ error: "OTP and user number are required" });
   }

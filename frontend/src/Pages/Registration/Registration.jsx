@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
     FaUser,
@@ -13,7 +14,13 @@ import {
     FaEnvelope,
     FaLock,
     FaPhone,
-    FaPlus,
+    FaGenderless,
+    FaArrowCircleRight,
+    FaMapMarkerAlt,
+    FaMars,
+    FaBriefcase,
+    FaUserTie,
+    FaHardHat,
 } from "react-icons/fa";
 import "./Registration.scss";
 import { ModalContext } from "../../ModelContextProvider/ModelContextProvider";
@@ -22,28 +29,40 @@ import Interests from "./Interests/Interests";
 import SmokingHabbits from "./SmokingHabbits/SmokingHabbits";
 import DrinkingHabbits from "./DrinkingHabbits/DrinkingHabbits";
 import Qualification from "./Qualification/Qualification";
-import { useNavigate } from "react-router-dom";
+import Gender from "./Gender/Gender";
+import Location from "./Location/Location";
+import Job from "./Job/Job";
 
 const Registration = () => {
     const { openModal, closeModal } = useContext(ModalContext);
-    const fileInputRef = useRef(null);
+    const fileInputRefProfile = useRef(null);
+    const fileInputRefMoreImages = useRef(null);
+    const fileInputRefReels = useRef(null);
+    const [profilePicturePreview, setProfilePicturePreview] = useState(null);
+    const [moreImagesPreviews, setMoreImagesPreviews] = useState([]);
+    const [reelsPreviews, setReelsPreviews] = useState([]);
 
     const [userData, setUserData] = useState({
         name: "",
         email: "",
         mob: "",
         password: "",
+        confirmPassword: "",
         dob: "",
         age: "",
+        gender: "",
+        dist: "",
         hobbies: [],
         interests: [],
         smokingHabits: "",
         drinkingHabits: "",
         qualification: "",
+        job: "",
         profilePicture: null,
         moreImages: [],
         reels: [],
     });
+    const [errors, setErrors] = useState({});
 
     const navigate = useNavigate();
 
@@ -53,40 +72,89 @@ const Registration = () => {
             ...prevData,
             [name]: value,
         }));
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: "",
+        }));
         console.log("Input values ", userData);
     };
 
-    // const handleFileChange = (e) => {
-    //     const { name, files } = e.target;
-    //     console.log("Values of E.target", e.target);
-    //     console.log("Selected files:", files);
-    //     console.log("Selected files:", e.target.name);
-    //     setUserData((prevData) => ({
-    //         ...prevData,
-    //         [name]: name === "profilePicture" ? files[0] : Array.from(files),
-    //     }));
-    // };
+    const validate = () => {
+        const newErrors = {};
+
+        if (!userData.name.trim()) {
+            newErrors.name = "Name is required";
+        }
+        if (!userData.email) {
+            newErrors.email = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(userData.email)) {
+            newErrors.email = "Email address is invalid";
+        }
+        if (!userData.mob) {
+            newErrors.mob = "Phone number is required";
+        } else if (!/^\d{10}$/.test(userData.mob)) {
+            newErrors.mob = "Phone number is invalid";
+        }
+        if (!userData.password) {
+            newErrors.password = "Password is required";
+        }
+        if (!userData.confirmPassword) {
+            newErrors.confirmPassword = "Confirm Password is required";
+        } else if (userData.password !== userData.confirmPassword) {
+            newErrors.confirmPassword = "Passwords do not match";
+        }
+        if (!userData.dob) {
+            newErrors.dob = "Date of Birth is required";
+        }
+        if (!userData.gender) {
+            newErrors.gender = "Gender is required";
+        }
+        if (!userData.dist) {
+            newErrors.dist = "Location is required";
+        }
+
+        return newErrors;
+    };
 
     const handleFileChange = (e) => {
         const { name, files } = e.target;
         console.log("Selected files:", files);
 
-        setUserData((prevData) => {
-            let updatedData;
-            if (name === "profilePicture") {
-                updatedData = files.length > 0 ? files[0] : null; // Store only the first file
-            } else if (name === "reels") {
-                updatedData = [...(prevData.reels || []), ...Array.from(files)];
+        if (name === "profilePicture") {
+            const file = files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    console.log("FileReader result:", reader.result);
+                    setProfilePicturePreview(reader.result); // Set single preview for profile picture
+                };
+                reader.readAsDataURL(file);
+                setUserData((prevData) => ({
+                    ...prevData,
+                    profilePicture: file,
+                }));
             } else {
-                updatedData = [...(prevData.moreImages || []), ...Array.from(files)];
+                setProfilePicturePreview(null);
             }
-           
-            return {
+        } else if (name === "moreImages") {
+            const newFiles = Array.from(files);
+            const newPreviewUrls = newFiles.map((file) => URL.createObjectURL(file));
+            setMoreImagesPreviews((prevUrls) => [...prevUrls, ...newPreviewUrls]);
+            setUserData((prevData) => ({
                 ...prevData,
-                [name]: updatedData,
-            };
-        });
+                moreImages: [...(prevData.moreImages || []), ...newFiles],
+            }));
+        } else if (name === "reels") {
+            const newFiles = Array.from(files);
+            const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
+            setReelsPreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
+            setUserData((prevData) => ({
+                ...prevData,
+                reels: [...(prevData.reels || []), ...newFiles],
+            }));
+        }
     };
+
     const handleHobbies = () => {
         openModal(
             <Hobbies
@@ -110,6 +178,30 @@ const Registration = () => {
             <SmokingHabbits
                 closeModal={closeModal}
                 setSelectedSmokingHabbits={(smokingHabits) => setUserData((prevData) => ({ ...prevData, smokingHabits }))}
+            />
+        );
+    };
+
+    const handleGender = () => {
+        openModal(
+            <Gender
+                closeModal={closeModal}
+                setSelectedGender={(gender) => setUserData((prevData) => ({ ...prevData, gender }))}
+            />
+        );
+    };
+
+    const handleJob = () => {
+        openModal(
+            <Job closeModal={closeModal} setSelectedJob={(job) => setUserData((prevData) => ({ ...prevData, job }))} />
+        );
+    };
+
+    const handleLocation = () => {
+        openModal(
+            <Location
+                closeModal={closeModal}
+                setSelectedLocation={(dist) => setUserData((prevData) => ({ ...prevData, dist }))}
             />
         );
     };
@@ -138,19 +230,29 @@ const Registration = () => {
         e.preventDefault();
         console.log("this is my user data", userData);
 
+        const newErrors = validate();
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
         const formData = new FormData();
 
         formData.append("name", userData.name);
         formData.append("email", userData.email);
         formData.append("mob", userData.mob);
         formData.append("password", userData.password);
+        formData.append("Confirm password", userData.confirmPassword);
         formData.append("dob", userData.dob);
         formData.append("age", userData.age);
+        formData.append("gender", userData.gender);
+        formData.append("dist", userData.dist);
         formData.append("hobbies", JSON.stringify(userData.hobbies));
         formData.append("interests", JSON.stringify(userData.interests));
         formData.append("smokingHabits", userData.smokingHabits);
         formData.append("drinkingHabits", userData.drinkingHabits);
         formData.append("qualification", userData.qualification);
+        formData.append("job", userData.job);
         formData.append("profilePicture", userData.profilePicture);
         if (userData.moreImages) {
             userData.moreImages.forEach((image) => formData.append("moreImages", image));
@@ -166,6 +268,7 @@ const Registration = () => {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
+                withCredentials: true,
             });
             console.log("Response status:", response.status);
             if (response.status === 201) {
@@ -193,8 +296,10 @@ const Registration = () => {
                             name="name"
                             value={userData.name}
                             onChange={handleInputChange}
+                            required
                         />
                     </label>
+                    {errors.name && <span className="error">{errors.name}</span>}
                 </div>
                 <div className="form-row">
                     <label>
@@ -208,9 +313,8 @@ const Registration = () => {
                             value={userData.email}
                             name="email"
                         />
+                        {errors.email && <span className="error">{errors.email}</span>}
                     </label>
-                </div>
-                <div className="form-row">
                     <label>
                         <div className="icon">
                             <FaPhone />
@@ -222,7 +326,10 @@ const Registration = () => {
                             value={userData.mob}
                             name="mob"
                         />
+                        {errors.mob && <span className="error">{errors.mob}</span>}
                     </label>
+                </div>
+                <div className="form-row">
                     <label>
                         <div className="icon">
                             <FaLock />
@@ -230,13 +337,26 @@ const Registration = () => {
                         <input
                             onChange={handleInputChange}
                             placeholder="Password:"
-                            value={userData.password}
                             type="password"
+                            value={userData.password}
                             name="password"
                         />
+                         {errors.password && <span className="error">{errors.password}</span>}
+                    </label>
+                    <label>
+                        <div className="icon">
+                            <FaLock />
+                        </div>
+                        <input
+                            onChange={handleInputChange}
+                            placeholder="Confirm Password:"
+                            value={userData.confirmPassword}
+                            type="password"
+                            name="confirmPassword"
+                        />
+                               {errors.confirmPassword && <span className="error">{errors.confirmPassword}</span>}
                     </label>
                 </div>
-
                 <div className="form-row">
                     <label>
                         <div className="icon">
@@ -249,6 +369,8 @@ const Registration = () => {
                             value={userData.dob}
                             onChange={handleInputChange}
                         />
+                         {errors.dob && <span className="error">{errors.dob}</span>}
+                   
                     </label>
                     <label>
                         <div className="icon">
@@ -261,6 +383,38 @@ const Registration = () => {
                             value={userData.age}
                             onChange={handleInputChange}
                         />
+                    </label>
+                </div>
+                <div className="form-row">
+                    <label>
+                        <div className="icon">
+                            <FaMars />
+                        </div>
+                        <input
+                            onClick={handleGender}
+                            placeholder="Gender:"
+                            type="text"
+                            value={userData.gender}
+                            name="hobbies"
+                            readOnly
+                        />
+                        {errors.gender && <span className="error">{errors.gender}</span>}
+                   
+                    </label>
+                    <label>
+                        <div className="icon">
+                            <FaMapMarkerAlt />
+                        </div>
+                        <input
+                            onClick={handleLocation}
+                            placeholder="Location :"
+                            value={userData.dist}
+                            type="text"
+                            name="location"
+                            readOnly
+                        />
+                          {errors.dist && <span className="error">{errors.dist}</span>}
+                   
                     </label>
                 </div>
                 <div className="form-row">
@@ -333,6 +487,19 @@ const Registration = () => {
                             readOnly
                         />
                     </label>
+                    <label>
+                        <div className="icon">
+                            <FaUserTie />
+                        </div>
+                        <input
+                            type="text"
+                            name="qualification"
+                            placeholder="Occupation :"
+                            value={userData.job}
+                            onClick={handleJob}
+                            readOnly
+                        />
+                    </label>
                 </div>
                 <div className="form-row">
                     <label>
@@ -340,8 +507,25 @@ const Registration = () => {
                             <FaImage />
                         </div>
                         Add Profile Picture:
-                        <input type="file" name="profilePicture" onChange ={handleFileChange} />
+                        <input
+                            type="file"
+                            name="profilePicture"
+                            accept="image/*"
+                            ref={fileInputRefProfile}
+                            style={{ display: "none" }}
+                            onChange={handleFileChange}
+                        />
+                        <button className="btn" type="button" onClick={() => fileInputRefProfile.current.click()}>
+                            <FaArrowCircleRight />
+                        </button>
                     </label>
+                    <div className="preview-container">
+                        {profilePicturePreview ? (
+                            <img src={profilePicturePreview} alt="Profile Preview" className="preview-image" />
+                        ) : (
+                            <span className="preview-placeholder">No profile picture selected</span>
+                        )}
+                    </div>
                 </div>
                 <div className="form-row">
                     <label>
@@ -349,11 +533,28 @@ const Registration = () => {
                             <FaImage />
                         </div>
                         Add More Images:
-                        <input type="file" name="moreImages" multiple onChange ={handleFileChange} ref={fileInputRef} />
-                        <button type="button" onClick={() => fileInputRef.current.click()}>
-                            <FaPlus />
+                        <input
+                            type="file"
+                            name="moreImages"
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            multiple
+                            onChange={handleFileChange}
+                            ref={fileInputRefMoreImages}
+                        />
+                        <button className="btn" type="button" onClick={() => fileInputRefMoreImages.current.click()}>
+                            <FaArrowCircleRight />
                         </button>
                     </label>
+                    <div className="preview-containerMoreImages">
+                        {moreImagesPreviews.length > 0 ? (
+                            moreImagesPreviews.map((url, index) => (
+                                <img key={index} src={url} alt={`More Preview ${index}`} className="preview-image" />
+                            ))
+                        ) : (
+                            <span className="preview-placeholder">you can add upto 5 images</span>
+                        )}
+                    </div>
                 </div>
                 <div className="form-row">
                     <label>
@@ -361,8 +562,28 @@ const Registration = () => {
                             <FaVideo />
                         </div>
                         Add Short Reels: &nbsp;
-                        <input type="file" name="reels" multiple onChange ={handleFileChange} />
+                        <input
+                            type="file"
+                            name="reels"
+                            accept="video/*"
+                            ref={fileInputRefReels}
+                            style={{ display: "none" }}
+                            multiple
+                            onChange={handleFileChange}
+                        />
+                        <button className="btn" type="button" onClick={() => fileInputRefReels.current.click()}>
+                            <FaArrowCircleRight />
+                        </button>
                     </label>
+                    <div className="preview-containerReels">
+                        {reelsPreviews.length > 0 ? (
+                            reelsPreviews.map((url, index) => (
+                                <video key={index} src={url} controls className="preview-video" />
+                            ))
+                        ) : (
+                            <span className="preview-placeholder">No reels selected</span>
+                        )}
+                    </div>
                 </div>
                 <div className="form-row">
                     <button onClick={handleSubmit} className="btn" type="submit">
